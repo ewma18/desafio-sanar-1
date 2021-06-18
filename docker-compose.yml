@@ -1,0 +1,65 @@
+version: "3.4"
+
+services:
+  sanar-challenge-mysql:
+    image: mysql:8
+    container_name: sanar-challenge-mysql
+    command: --default-authentication-plugin=mysql_native_password --init-file /data/application/init.sql
+    volumes: 
+      - ./sql-scripts/init.sql:/data/application/init.sql
+    restart: always
+    environment:
+      MYSQL_DATABASE: sanar
+      MYSQL_ROOT_PASSWORD: _hard_password_
+      MYSQL_USER: sanarUsr
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+
+  sanar-challenge-redis:
+    image: redis
+    container_name: sanar-challeng-redis
+    command: redis-server
+    ports:
+      - "6379:6379"
+
+  sanar-challenge-api:
+    container_name: sanar-challenge-api
+    image: sanar-challenge-api
+    restart: always
+    environment: 
+      MYSQL_HOST: mysql
+      MYSQL_USER: sanarUsr
+      MYSQL_PASSWORD: 1234
+      CACHE_REDIS_HOST: redis
+    links:
+      - sanar-challenge-mysql
+      - sanar-challenge-redis
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - sanar-challenge-mysql
+      - sanar-challenge-redis
+
+  sanar-challenge-web:
+    container_name: sanar-challenge-web
+    image: sanar-challenge-web
+    restart: always
+    environment: 
+      API_URL: http://localhost:9090
+    links:
+      - sanar-challenge-api
+    build:
+      context: .
+      dockerfile: ./web/Dockerfile
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - sanar-challenge-api
