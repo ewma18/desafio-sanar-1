@@ -36,7 +36,7 @@ Não se preocupe com a beleza da sua interface, não é esse o intuito do exerc�
 -   **Legibilidade do código** 
 -   **Tratamento de erros** 
 -   **Segurança**: Existe alguma vulnerabilidade clara?
--   **Cobertura de testes** (Não esperamos cobertura completa)
+-   **Qualidade dos testes** (Não esperamos cobertura completa)
 -   **Histórico de commits** (estrutura e qualidade)
 -   **UX**: A interface é de fácil uso e auto-explicativa? A API é intuitiva?
 -   **Escolhas técnicas**: A escolha das bibliotecas, banco de dados, arquitetura, etc, é a melhor escolha para a aplicação?
